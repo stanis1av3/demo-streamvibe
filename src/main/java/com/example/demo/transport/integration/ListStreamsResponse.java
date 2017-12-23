@@ -36,6 +36,7 @@ public class ListStreamsResponse extends BaseResponse {
         Integer options;
         Integer duration;
         String image;
+        String videoUrl;
     }
 
 }

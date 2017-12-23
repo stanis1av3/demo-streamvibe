@@ -43,7 +43,7 @@ public class StreamingController {
             produces = APPLICATION_JSON_VALUE,
             method = RequestMethod.GET)
     public ResponseEntity getVideoItem(@PathVariable String streamId) {
-        return new ResponseEntity<>(streamingService.getStreamReadyUrl(streamId), HttpStatus.OK);
+        return new ResponseEntity<>(new StreamingResponse(streamId, streamingService.getStreamReadyUrl(streamId)), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/video",

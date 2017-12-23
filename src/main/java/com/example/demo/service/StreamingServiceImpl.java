@@ -80,6 +80,8 @@ public class StreamingServiceImpl implements StreamingService {
         HttpEntity<ListStreamsRequest> getApiTokenRequest = new HttpEntity<>(new ListStreamsRequest(token, listLimit, listOffset, sortMode), headers);
         ResponseEntity<ListStreamsResponse> response = restTemplate.postForEntity(SERVICE_URI, getApiTokenRequest, ListStreamsResponse.class);
 
+        response.getBody().getResult().getStreams().forEach(stream -> stream.setVideoUrl(getStreamReadyUrl(stream.getId())));
+
         return response.getBody();
     }
 
