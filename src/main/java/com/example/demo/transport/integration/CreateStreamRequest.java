@@ -1,9 +1,7 @@
-package com.example.demo.transport;
+package com.example.demo.transport.integration;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.lang.reflect.Method;
 
 /**
  * Created by Pavlovskii-pc on 22/12/2017.

@@ -1,4 +1,4 @@
-package com.example.demo.transport;
+package com.example.demo.transport.integration;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

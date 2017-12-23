@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0' >
+
+	<title>Upload file</title>
+	<base href="%outputBase%">
+	<link href="favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:100,400,500,700,400italic,500italic,700italic|Roboto+Condensed:400,700&subset=latin,cyrillic" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+
+<div>
+	<form method="post"
+		  enctype="multipart/form-data"
+		  action="http://localhost:8080/video/upload/">
+		<input type="file" name="file" accept="application/mp4"/>
+		<button>Submit</button>
+	</form>
+</div>
+
+
+</body>
+</html>
