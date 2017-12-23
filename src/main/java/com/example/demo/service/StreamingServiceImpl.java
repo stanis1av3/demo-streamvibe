@@ -11,11 +11,13 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.databene.jdbacl.identity.mem.SourceTableMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
@@ -41,6 +43,7 @@ public class StreamingServiceImpl implements StreamingService {
     private RestTemplate restTemplate = new RestTemplate();
 
 
+    @Override
     public String uploadVideoStream(File file) {
 
         String token = getApiToken();
@@ -50,6 +53,7 @@ public class StreamingServiceImpl implements StreamingService {
     }
 
 
+    @Override
     public String uploadVideoStream(byte[] byteArray) {
         String token = getApiToken();
         String streamId = uploadVideo(token, byteArray);
@@ -57,6 +61,7 @@ public class StreamingServiceImpl implements StreamingService {
         return streamId;
     }
 
+    @Override
     public String getVideoStreamUrl(String streamId) {
         String streamUrl = getStreamReadyUrl(streamId);
         log.debug("Stream url={}", streamUrl);
@@ -64,10 +69,59 @@ public class StreamingServiceImpl implements StreamingService {
         return streamUrl;
     }
 
+    @Override
+    public ListStreamsResponse listVideoStreams(Integer listLimit, Integer listOffset, String sortMode) {
+
+        String token = getApiToken();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<ListStreamsRequest> getApiTokenRequest = new HttpEntity<>(new ListStreamsRequest(token, listLimit, listOffset, sortMode), headers);
+        ResponseEntity<ListStreamsResponse> response = restTemplate.postForEntity(SERVICE_URI, getApiTokenRequest, ListStreamsResponse.class);
+
+        return response.getBody();
+    }
+
+    @Override
+    public String unregisterVideoStream(String streamId) {
+        String token = getApiToken();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<UnregisterStreamRequest> unregisterStreamRequest = new HttpEntity<>(new UnregisterStreamRequest(token, streamId), headers);
+        ResponseEntity<BaseResponse> response = restTemplate.postForEntity(SERVICE_URI, unregisterStreamRequest, BaseResponse.class);
+
+        return response.getBody().getStatus();
+    }
+
 
     @PostConstruct
     public void started() {
-        System.out.println("streaming service started");
+        System.out.println("Checking config params..");
+
+        if (StringUtils.isEmpty(SERVICE_URI)) {
+            throw new IllegalArgumentException("SERVICE_URI is empty!");
+        }
+        if (StringUtils.isEmpty(ACCESS_KEY)) {
+            throw new IllegalArgumentException("ACCESS_KEY is empty!");
+        }
+        if (StringUtils.isEmpty(VENDOR_KEY)) {
+            throw new IllegalArgumentException("VENDOR_KEY is empty!");
+        }
+        if (StringUtils.isEmpty(STREAM_VIDEO_URL)) {
+            throw new IllegalArgumentException("STREAM_VIDEO_URL is empty!");
+        }
+        System.out.println("ok..");
+        System.out.println("Getting api token from streamVibe..");
+        try {
+            getApiToken();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Can't get ApiToken from streamVibe!! Check availability or credentials");
+        }
+        System.out.println("ok..");
+        System.out.println("Streaming service started");
     }
 
     private String getApiToken() {
@@ -115,7 +169,7 @@ public class StreamingServiceImpl implements StreamingService {
         return streamId;
     }
 
-    private String getStreamReadyUrl(String streamId) {
+    public String getStreamReadyUrl(String streamId) {
         return STREAM_VIDEO_URL.replace("ACCESS_KEY", ACCESS_KEY).replace("STREAM_ID", streamId);
     }
 

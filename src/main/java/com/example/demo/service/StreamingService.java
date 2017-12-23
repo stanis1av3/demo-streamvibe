@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import com.example.demo.transport.integration.ListStreamsResponse;
+
 import java.io.File;
 
 /**
@@ -33,5 +35,10 @@ public interface StreamingService {
 
     String getVideoStreamUrl(String streamId);
 
+    ListStreamsResponse listVideoStreams(Integer listLimit, Integer listOffset, String sortMode);
+
+    String unregisterVideoStream(String streamId);
+
+    String getStreamReadyUrl(String streamId);
 
 }

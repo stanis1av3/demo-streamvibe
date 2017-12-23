@@ -17,6 +17,8 @@ public class BaseRequest {
         getApiToken,
         createStream,
         registerStream,
-        scheduleStream
+        scheduleStream,
+        listStreams,
+        unregisterStream
     }
 }
