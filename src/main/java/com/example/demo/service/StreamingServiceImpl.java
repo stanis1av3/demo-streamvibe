@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.transport.integration.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -24,7 +25,8 @@ import java.io.File;
  * Created by Pavlovskii-pc on 22/12/2017.
  */
 @Component
-public class StreamingServiceImpl implements StreamingService{
+@Slf4j
+public class StreamingServiceImpl implements StreamingService {
 
     @Value("${streaming.service.uri}")
     String SERVICE_URI;
@@ -56,7 +58,10 @@ public class StreamingServiceImpl implements StreamingService{
     }
 
     public String getVideoStreamUrl(String streamId) {
-        return getStreamReadyUrl(streamId);
+        String streamUrl = getStreamReadyUrl(streamId);
+        log.debug("Stream url={}", streamUrl);
+
+        return streamUrl;
     }
 
 
@@ -87,7 +92,7 @@ public class StreamingServiceImpl implements StreamingService{
     }
 
     private String uploadVideo(String token, File file, byte[] byteArray) {
-
+        log.debug("Starting to upload a file... size={}", file != null ? file.length() : byteArray.length);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -102,6 +107,8 @@ public class StreamingServiceImpl implements StreamingService{
         String uploadUrl = responseB.getBody().getResult().getUploadUrl();
 
         uploadData(file, byteArray, uploadUrl);
+
+        log.debug("Upload is done...");
 
         registerStream(streamId, token, sourceUrl);
 
@@ -119,6 +126,8 @@ public class StreamingServiceImpl implements StreamingService{
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<RegisterStreamRequest> registerStreamRequest = new HttpEntity<>(new RegisterStreamRequest(token, streamId, sourceUrl, "video.mp4"), headers);
         ResponseEntity<BaseResponse> response = restTemplate.postForEntity(SERVICE_URI, registerStreamRequest, BaseResponse.class);
+
+        log.debug("Register is done.. status={}", response.getBody().getStatus());
 
     }
 
