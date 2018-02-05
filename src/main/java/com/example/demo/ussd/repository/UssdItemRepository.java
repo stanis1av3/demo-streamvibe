@@ -76,5 +76,7 @@ public class UssdItemRepository {
         itemBB.setChildItems(Lists.newArrayList(itemBBA, itemBBB, itemBBC, itemBBD, back));
 
         root.setCaption("hello!");
+
+        this.root = root;
     }
 }

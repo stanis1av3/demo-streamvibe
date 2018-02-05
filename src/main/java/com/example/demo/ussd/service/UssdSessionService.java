@@ -5,6 +5,7 @@ import com.example.demo.ussd.repository.UssdItemRepository;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -27,18 +28,18 @@ public class UssdSessionService {
 
     Item root;
 
-    @PostConstruct
-    void started(){
-        root=itemRepository.getRootItem();
-    }
 
 
     public Item goForward(String from, String message) {
 
+        if(StringUtils.isEmpty(message)){
+            return getCurrent(from);
+        }
+
         if (itemSesstions.containsKey(from)) {
             Item nextItem;
             if (itemSesstions.get(from).getChildItems() != null) {
-                nextItem = itemSesstions.get(from).getChildItems().get(Integer.valueOf(message));
+                nextItem = itemSesstions.get(from).getChildItems().get(Integer.valueOf(message)-1);
             } else {
                 return root;
             }
@@ -64,7 +65,14 @@ public class UssdSessionService {
         if (itemSesstions.containsKey(from)) {
             return itemSesstions.get(from);
         } else {
-            return itemSesstions.put(from, root);
+            itemSesstions.put(from, root);
+            return root;
         }
+    }
+
+
+    @PostConstruct
+    void started(){
+        root=itemRepository.getRootItem();
     }
 }

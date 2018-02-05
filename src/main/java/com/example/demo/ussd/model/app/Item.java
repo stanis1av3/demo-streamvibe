@@ -2,6 +2,7 @@ package com.example.demo.ussd.model.app;
 
 import com.sun.deploy.security.ValidationState;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -31,4 +32,11 @@ public class Item {
         APP_ECONOMICS_NEWS;
     }
 
+    @Override
+    public String toString() {
+        return "Item{" +
+                "type=" + type +
+                ", caption='" + caption + '\'' +
+                '}';
+    }
 }
