@@ -4,14 +4,11 @@ import com.example.demo.ussd.model.UssdMessageDTO;
 import com.example.demo.ussd.model.app.Item;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -23,25 +20,25 @@ public class UssdRootService {
     @Autowired
     UssdAppsService appsService;
 
-    Item root = new Item();
+    @Autowired
+    UssdSessionService sessionService;
 
-    public Map<String, ArrayList<String>> sessions = new HashMap<>();
+    Item root = new Item();
 
 
     public UssdMessageDTO renderResponse(UssdMessageDTO messageDTO) {
 
+        Item item = sessionService.getCurrent(messageDTO.getFrom());
 
-        List<String> userMessages;
-
-        if (!messageDTO.getMessage().equals("0")) {
-            userMessages = goForward(messageDTO.getFrom(), messageDTO.getMessage());
-        } else {
-            userMessages = goBack(messageDTO.getFrom());
+        if (item.getType() == Item.Type.APP_GO_BACK) {
+            item = sessionService.goBack(messageDTO.getFrom());
+            String preparedView = item.getChildItems().stream().map(i -> i.getCaption()).reduce((a, b) -> a + "\n" + b).get();
         }
 
-        List<String> views = processMessages(userMessages);
+        if (item.getType()==Item.Type.MENU) {
+            item = sessionService.goForward(from, me)
+        }
 
-        String preparedView = views.stream().reduce((a, b) -> a + "\n" + b).get();
 
         UssdMessageDTO responseMessageDTO = new UssdMessageDTO();
         responseMessageDTO.setTo(messageDTO.getFrom());
@@ -49,22 +46,22 @@ public class UssdRootService {
         return responseMessageDTO;
     }
 
-    private List<String> goForward(String from, String message) {
-        if (sessions.containsKey(from)) {
-            sessions.get(from).add(message);
-            return sessions.get(from);
-        } else {
-            sessions.put(from, Lists.newArrayList(message));
-            return sessions.get(from);
-        }
-    }
-
-    private List<String> goBack(String from) {
-        ArrayList<String> messages = sessions.get(from);
-        messages.remove(messages.size() - 1);
-        sessions.put(from, messages);
-        return messages;
-    }
+//    private List<String> goForward(String from, String message) {
+//        if (sessions.containsKey(from)) {
+//            sessions.get(from).add(message);
+//            return sessions.get(from);
+//        } else {
+//            sessions.put(from, Lists.newArrayList(message));
+//            return sessions.get(from);
+//        }
+//    }
+//
+//    private List<String> goBack(String from) {
+//        ArrayList<String> messages = sessions.get(from);
+//        messages.remove(messages.size() - 1);
+//        sessions.put(from, messages);
+//        return messages;
+//    }
 
     private List<String> processMessages(List<String> userMessages) {
         List<String> responseViews = new ArrayList<>();
@@ -87,7 +84,7 @@ public class UssdRootService {
                 responseViews = appsService.currencyExchangeRate();
             }
 
-            if(item.getType() == Item.Type.APP_ECONOMICS_NEWS) {
+            if (item.getType() == Item.Type.APP_ECONOMICS_NEWS) {
                 responseViews = appsService.economicsNews();
             }
 

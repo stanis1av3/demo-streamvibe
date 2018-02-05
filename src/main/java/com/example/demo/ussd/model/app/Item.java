@@ -15,6 +15,8 @@ public class Item {
 
     String caption;
 
+    Item parent;
+
     List<Item> childItems;
 
 
@@ -24,7 +26,7 @@ public class Item {
         APP_B,
         APP_C,
         APP_X,
-        APP_QUIT,
+        APP_GO_BACK,
         APP_EXCHANGE_RATES,
         APP_ECONOMICS_NEWS;
     }
