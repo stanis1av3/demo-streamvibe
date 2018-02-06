@@ -1,8 +1,7 @@
 package com.example.demo.ussd.service;
 
-import com.example.demo.ussd.model.app.Item;
+import com.example.demo.ussd.model.app.AppItem;
 import com.example.demo.ussd.repository.UssdItemRepository;
-import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -10,7 +9,6 @@ import org.springframework.util.StringUtils;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,20 +22,20 @@ public class UssdSessionService {
     UssdItemRepository itemRepository;
 
     public Map<String, ArrayList<String>> userSessions = new HashMap<>();
-    public Map<String, Item> itemSesstions = new HashMap<>();
+    public Map<String, AppItem> itemSesstions = new HashMap<>();
 
-    Item root;
+    AppItem root;
 
 
 
-    public Item goForward(String from, String message) {
+    public AppItem goForward(String from, String message) {
 
         if(StringUtils.isEmpty(message)){
             return getCurrent(from);
         }
 
         if (itemSesstions.containsKey(from)) {
-            Item nextItem;
+            AppItem nextItem;
             if (itemSesstions.get(from).getChildItems() != null) {
                 nextItem = itemSesstions.get(from).getChildItems().get(Integer.valueOf(message)-1);
             } else {
@@ -51,9 +49,9 @@ public class UssdSessionService {
         }
     }
 
-    public Item goBack(String from) {
+    public AppItem goBack(String from) {
         if (itemSesstions.containsKey(from)) {
-            Item item = itemSesstions.get(from);
+            AppItem item = itemSesstions.get(from);
             return item.getParent() != null ? item.getParent() : root;
         } else {
             return itemSesstions.put(from, root);
@@ -61,7 +59,7 @@ public class UssdSessionService {
 
     }
 
-    public Item getCurrent(String from){
+    public AppItem getCurrent(String from){
         if (itemSesstions.containsKey(from)) {
             return itemSesstions.get(from);
         } else {

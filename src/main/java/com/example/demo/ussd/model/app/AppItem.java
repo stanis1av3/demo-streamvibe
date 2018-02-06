@@ -1,8 +1,6 @@
 package com.example.demo.ussd.model.app;
 
-import com.sun.deploy.security.ValidationState;
 import lombok.Data;
-import lombok.ToString;
 
 import java.util.List;
 
@@ -10,15 +8,15 @@ import java.util.List;
  * Created by Pavlovskii-pc on 05/02/2018.
  */
 @Data
-public class Item {
+public class AppItem {
 
     Type type;
 
     String caption;
 
-    Item parent;
+    AppItem parent;
 
-    List<Item> childItems;
+    List<AppItem> childItems;
 
 
     public enum Type {

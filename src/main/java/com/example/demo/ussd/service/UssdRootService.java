@@ -1,21 +1,21 @@
 package com.example.demo.ussd.service;
 
 import com.example.demo.ussd.model.UssdMessageDTO;
-import com.example.demo.ussd.model.app.Item;
+import com.example.demo.ussd.model.app.AppItem;
 import com.example.demo.ussd.repository.UssdItemRepository;
-import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Pavlovskii-pc on 05/02/2018.
  */
 @Service
+@Slf4j
 public class UssdRootService {
 
     @Autowired
@@ -24,7 +24,7 @@ public class UssdRootService {
     @Autowired
     UssdSessionService sessionService;
 
-    Item root;
+    AppItem root;
 
     @Autowired
     UssdItemRepository itemRepository;
@@ -33,28 +33,32 @@ public class UssdRootService {
 
     public UssdMessageDTO renderResponse(UssdMessageDTO messageDTO) {
 
-        Item item = sessionService.getCurrent(messageDTO.getFrom());
+        log.debug("Test message!");
+
+        AppItem item = sessionService.getCurrent(messageDTO.getFrom());
 
         String inputMessage = messageDTO.getMessage();
         String from = messageDTO.getFrom();
+        List<String> appResponse = new ArrayList();
 
-        if (item.getType()==Item.Type.MENU) {
-            item = sessionService.goForward(from, inputMessage);
+        if (item.getType()== AppItem.Type.MENU) {
+            appResponse = appsService.menuApp(from, inputMessage);
         }
 
-        if (item.getType() == Item.Type.APP_GO_BACK) {
-            item = sessionService.goBack(messageDTO.getFrom());
+        if (item.getType() == AppItem.Type.APP_GO_BACK) {
+            appResponse = appsService.goBackApp(from);
         }
 
-        if(item.getType() == Item.Type.APP_EXCHANGE_RATES) {
+        if (item.getType()== AppItem.Type.APP_ECONOMICS_NEWS){
+        }
 
+        if(item.getType() == AppItem.Type.APP_EXCHANGE_RATES) {
+            item = sessionService.getCurrent(from);
         }
 
 
-        String preparedView = item.getChildItems()
-                .stream()
-                .map(i -> i.getCaption()).reduce((a, b) -> a + "\n" + b)
-                .get();
+        String preparedView = appResponse
+                .stream().reduce((a,b)->a+"\n"+b).get();
 
 
         UssdMessageDTO responseMessageDTO = new UssdMessageDTO();

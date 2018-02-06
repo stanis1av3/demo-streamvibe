@@ -1,6 +1,6 @@
 package com.example.demo.ussd.repository;
 
-import com.example.demo.ussd.model.app.Item;
+import com.example.demo.ussd.model.app.AppItem;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 
@@ -12,66 +12,66 @@ import javax.annotation.PostConstruct;
 @Component
 public class UssdItemRepository {
 
-    Item root;
+    AppItem root;
 
-    public Item getRootItem(){
+    public AppItem getRootItem(){
         return root;
     }
 
     @PostConstruct
     void started(){
-        Item root = new Item();
+        AppItem root = new AppItem();
 
-        root.setType(Item.Type.MENU);
+        root.setType(AppItem.Type.MENU);
 
-        Item itemA = new Item();
+        AppItem itemA = new AppItem();
         itemA.setCaption("1 Currencies");
-        itemA.setType(Item.Type.APP_EXCHANGE_RATES);
+        itemA.setType(AppItem.Type.APP_EXCHANGE_RATES);
 
-        Item itemB = new Item();
+        AppItem itemB = new AppItem();
         itemB.setCaption("2 News");
-        itemB.setType(Item.Type.MENU);
+        itemB.setType(AppItem.Type.MENU);
 
-        Item itemC = new Item();
+        AppItem itemC = new AppItem();
         itemC.setCaption("3 Weather");
-        itemC.setType(Item.Type.MENU);
+        itemC.setType(AppItem.Type.MENU);
 
-        Item itemQuit = new Item();
+        AppItem itemQuit = new AppItem();
 
         itemQuit.setCaption("0 Quit");
-        itemQuit.setType(Item.Type.APP_GO_BACK);
+        itemQuit.setType(AppItem.Type.APP_GO_BACK);
 
         root.setChildItems(Lists.newArrayList(itemA, itemB, itemC, itemQuit));
 
-        Item back = new Item();
+        AppItem back = new AppItem();
         back.setCaption("0 back");
-        back.setType(Item.Type.APP_GO_BACK);
+        back.setType(AppItem.Type.APP_GO_BACK);
 
-        Item itemBA = new Item();
+        AppItem itemBA = new AppItem();
         itemBA.setCaption("1 Local news");
-        itemBA.setType(Item.Type.MENU);
+        itemBA.setType(AppItem.Type.MENU);
 
-        Item itemBB = new Item();
+        AppItem itemBB = new AppItem();
         itemBB.setCaption("2 Federal news");
-        itemBB.setType(Item.Type.MENU);
+        itemBB.setType(AppItem.Type.MENU);
         itemB.setChildItems(Lists.newArrayList(itemBA, itemBB, back));
 
-        Item itemBBA = new Item();
+        AppItem itemBBA = new AppItem();
         itemBBA.setCaption("1 Economics");
-        itemBBA.setType(Item.Type.APP_ECONOMICS_NEWS);
+        itemBBA.setType(AppItem.Type.APP_ECONOMICS_NEWS);
 
 
-        Item itemBBB = new Item();
+        AppItem itemBBB = new AppItem();
         itemBBB.setCaption("2 Security");
-        itemBBB.setType(Item.Type.APP_A);
+        itemBBB.setType(AppItem.Type.APP_A);
 
-        Item itemBBC = new Item();
+        AppItem itemBBC = new AppItem();
         itemBBC.setCaption("3 Culture");
-        itemBBC.setType(Item.Type.APP_B);
+        itemBBC.setType(AppItem.Type.APP_B);
 
-        Item itemBBD = new Item();
+        AppItem itemBBD = new AppItem();
         itemBBD.setCaption("4 Sports");
-        itemBBD.setType(Item.Type.APP_C);
+        itemBBD.setType(AppItem.Type.APP_C);
 
         itemBB.setChildItems(Lists.newArrayList(itemBBA, itemBBB, itemBBC, itemBBD, back));
 
