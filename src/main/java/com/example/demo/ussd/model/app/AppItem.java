@@ -25,9 +25,10 @@ public class AppItem {
         APP_B,
         APP_C,
         APP_X,
-        APP_GO_BACK,
-        APP_EXCHANGE_RATES,
-        APP_ECONOMICS_NEWS;
+        GO_BACK_APP,
+        EXCHANGE_RATES_APP,
+        ECONOMICS_NEWS_APP,
+        APP_PING
     }
 
     @Override

@@ -21,7 +21,6 @@ public class UssdSessionService {
     @Autowired
     UssdItemRepository itemRepository;
 
-    public Map<String, ArrayList<String>> userSessions = new HashMap<>();
     public Map<String, AppItem> itemSesstions = new HashMap<>();
 
     AppItem root;
@@ -36,12 +35,14 @@ public class UssdSessionService {
 
         if (itemSesstions.containsKey(from)) {
             AppItem nextItem;
+            AppItem currentItem = itemSesstions.get(from);
             if (itemSesstions.get(from).getChildItems() != null) {
-                nextItem = itemSesstions.get(from).getChildItems().get(Integer.valueOf(message)-1);
+                nextItem = itemSesstions.get(from).getChildItems().stream().filter(i->i.getCaption().substring(0,1).equals(message)).findFirst().get();
+                itemSesstions.put(from, nextItem);
             } else {
                 return root;
             }
-            nextItem.setParent(itemSesstions.get(from));
+            nextItem.setParent(currentItem);
             return nextItem;
 
         } else {
@@ -52,7 +53,8 @@ public class UssdSessionService {
     public AppItem goBack(String from) {
         if (itemSesstions.containsKey(from)) {
             AppItem item = itemSesstions.get(from);
-            return item.getParent() != null ? item.getParent() : root;
+            itemSesstions.put(from, item.getParent() != null ? item.getParent() : root);
+            return itemSesstions.get(from);
         } else {
             return itemSesstions.put(from, root);
         }
@@ -67,7 +69,6 @@ public class UssdSessionService {
             return root;
         }
     }
-
 
     @PostConstruct
     void started(){

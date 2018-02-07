@@ -15,4 +15,9 @@ public class UssdMessageDTO {
     String to;
     String sid;
     String message;
+
+    public UssdMessageDTO(String to, String message) {
+        this.to=to;
+        this.message=message;
+    }
 }

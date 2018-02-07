@@ -1,14 +1,15 @@
 package com.example.demo.ussd.service;
 
+import com.example.demo.ussd.apps.system.UssdApp;
 import com.example.demo.ussd.model.UssdMessageDTO;
 import com.example.demo.ussd.model.app.AppItem;
 import com.example.demo.ussd.repository.UssdItemRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,8 +19,6 @@ import java.util.List;
 @Slf4j
 public class UssdRootService {
 
-    @Autowired
-    UssdAppsService appsService;
 
     @Autowired
     UssdSessionService sessionService;
@@ -29,56 +28,49 @@ public class UssdRootService {
     @Autowired
     UssdItemRepository itemRepository;
 
+    @Autowired
+    ApplicationContext context;
 
 
     public UssdMessageDTO renderResponse(UssdMessageDTO messageDTO) {
 
-        log.debug("Test message!");
 
-        AppItem item = sessionService.getCurrent(messageDTO.getFrom());
-
-        String inputMessage = messageDTO.getMessage();
+        String input = messageDTO.getMessage();
         String from = messageDTO.getFrom();
-        List<String> appResponse = new ArrayList();
 
-        if (item.getType()== AppItem.Type.MENU) {
-            appResponse = appsService.menuApp(from, inputMessage);
+        AppItem currentItem = sessionService.getCurrent(from);
+
+        if (currentItem.getType() == AppItem.Type.MENU && parseInput(input)!=null) {
+            currentItem = sessionService.goForward(from, input);
+            input="";
         }
 
-        if (item.getType() == AppItem.Type.APP_GO_BACK) {
-            appResponse = appsService.goBackApp(from);
-        }
-
-        if (item.getType()== AppItem.Type.APP_ECONOMICS_NEWS){
-        }
-
-        if(item.getType() == AppItem.Type.APP_EXCHANGE_RATES) {
-            item = sessionService.getCurrent(from);
-        }
-
+        List<String> appResponse = executeApp(from, input, currentItem.getType());
 
         String preparedView = appResponse
-                .stream().reduce((a,b)->a+"\n"+b).get();
+                .stream().reduce((a, b) -> a + "\n" + b).get();
 
 
-        UssdMessageDTO responseMessageDTO = new UssdMessageDTO();
-        responseMessageDTO.setTo(messageDTO.getFrom());
-        responseMessageDTO.setMessage(preparedView);
-        return responseMessageDTO;
+        return new UssdMessageDTO(from, preparedView);
     }
 
-
-
-    private Integer convertStringMessageToInteger(String userMessage) {
+    private Integer parseInput(String input) {
         try {
-            return Integer.parseInt(userMessage);
+            return Integer.parseInt(input);
         } catch (Exception e) {
             return null;
         }
     }
 
+
+
+    private List<String> executeApp(String from, String input, AppItem.Type appItemType) {
+        UssdApp menuApp = (UssdApp) context.getBean(appItemType.name());
+        return menuApp.run(from, input);
+    }
+
     @PostConstruct
-    void started(){
+    void started() {
         root = itemRepository.getRootItem();
     }
 }

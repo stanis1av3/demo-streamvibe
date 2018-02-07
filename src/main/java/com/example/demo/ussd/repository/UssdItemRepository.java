@@ -26,7 +26,7 @@ public class UssdItemRepository {
 
         AppItem itemA = new AppItem();
         itemA.setCaption("1 Currencies");
-        itemA.setType(AppItem.Type.APP_EXCHANGE_RATES);
+        itemA.setType(AppItem.Type.EXCHANGE_RATES_APP);
 
         AppItem itemB = new AppItem();
         itemB.setCaption("2 News");
@@ -39,13 +39,13 @@ public class UssdItemRepository {
         AppItem itemQuit = new AppItem();
 
         itemQuit.setCaption("0 Quit");
-        itemQuit.setType(AppItem.Type.APP_GO_BACK);
+        itemQuit.setType(AppItem.Type.GO_BACK_APP);
 
         root.setChildItems(Lists.newArrayList(itemA, itemB, itemC, itemQuit));
 
         AppItem back = new AppItem();
         back.setCaption("0 back");
-        back.setType(AppItem.Type.APP_GO_BACK);
+        back.setType(AppItem.Type.GO_BACK_APP);
 
         AppItem itemBA = new AppItem();
         itemBA.setCaption("1 Local news");
@@ -58,7 +58,7 @@ public class UssdItemRepository {
 
         AppItem itemBBA = new AppItem();
         itemBBA.setCaption("1 Economics");
-        itemBBA.setType(AppItem.Type.APP_ECONOMICS_NEWS);
+        itemBBA.setType(AppItem.Type.ECONOMICS_NEWS_APP);
 
 
         AppItem itemBBB = new AppItem();
@@ -73,7 +73,11 @@ public class UssdItemRepository {
         itemBBD.setCaption("4 Sports");
         itemBBD.setType(AppItem.Type.APP_C);
 
-        itemBB.setChildItems(Lists.newArrayList(itemBBA, itemBBB, itemBBC, itemBBD, back));
+        AppItem back3 = new AppItem();
+        back3.setCaption("0 back");
+        back3.setType(AppItem.Type.GO_BACK_APP);
+
+        itemBB.setChildItems(Lists.newArrayList(itemBBA, itemBBB, itemBBC, itemBBD, back3));
 
         root.setCaption("hello!");
 
