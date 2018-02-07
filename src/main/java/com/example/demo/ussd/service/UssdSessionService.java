@@ -25,6 +25,9 @@ public class UssdSessionService {
 
     AppItem root;
 
+    public Map<String, String> appSession = new HashMap<>();
+
+
 
 
     public AppItem goForward(String from, String message) {
@@ -68,6 +71,11 @@ public class UssdSessionService {
             itemSesstions.put(from, root);
             return root;
         }
+    }
+
+    public String persistAppSession(String from, String state) {
+        appSession.put(from, state);
+        return state;
     }
 
     @PostConstruct

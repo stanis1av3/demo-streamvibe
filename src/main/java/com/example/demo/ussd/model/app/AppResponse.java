@@ -11,16 +11,16 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 
-public class AppViewObject {
+public class AppResponse {
 
     List<String> body;
     Integer offset = 0;
 
-    public AppViewObject(List<String> body){
+    public AppResponse(List<String> body){
         this.body=body;
     }
 
-    public AppViewObject(Integer offset){
+    public AppResponse(Integer offset){
         this.offset = offset;
     }
 

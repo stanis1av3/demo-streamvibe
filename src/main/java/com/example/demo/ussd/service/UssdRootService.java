@@ -3,7 +3,7 @@ package com.example.demo.ussd.service;
 import com.example.demo.ussd.apps.system.UssdApp;
 import com.example.demo.ussd.model.UssdMessageDTO;
 import com.example.demo.ussd.model.app.AppItem;
-import com.example.demo.ussd.model.app.AppViewObject;
+import com.example.demo.ussd.model.app.AppResponse;
 import com.example.demo.ussd.repository.UssdItemRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +65,7 @@ public class UssdRootService {
 
         UssdApp ussdApp = (UssdApp) context.getBean(appItemType.name());
 
-        AppViewObject view = ussdApp.run(from, input);
+        AppResponse view = ussdApp.run(from, input);
 
         if(view.getOffset()<0){
             AppItem item = sessionService.goBack(from);

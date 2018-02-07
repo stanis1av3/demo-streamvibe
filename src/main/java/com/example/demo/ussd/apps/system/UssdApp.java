@@ -1,10 +1,7 @@
 package com.example.demo.ussd.apps.system;
 
-import com.example.demo.ussd.model.app.AppItem;
-import com.example.demo.ussd.model.app.AppViewObject;
-
-import java.util.List;
+import com.example.demo.ussd.model.app.AppResponse;
 
 public interface UssdApp {
-    AppViewObject run(String from, String input);
+    AppResponse run(String from, String input);
 }
