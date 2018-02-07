@@ -30,6 +30,9 @@ public class PageObject {
     }
 
     public String getCurrent(){
+        if(lastShownIndex==null){
+            lastShownIndex=0;
+        }
         return pageable.get(lastShownIndex);
     }
 

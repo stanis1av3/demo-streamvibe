@@ -19,23 +19,30 @@ public class EconomicsNewsApp implements UssdApp {
     @Autowired
     UssdSessionService sessionService;
 
-    PageObject stateObject;
+    PageObject pageObject;
 
     @Override
     public AppResponse run(String from, String input) {
 
-        stateObject = sessionService.getObject(from);
+        pageObject = sessionService.getObject(from);
+        String item2 = "I found a solution. I am not very happy with it since it still does not answer my original question why the logging.file property is not respected. ... I don't know whether this would help you but I  ";
 
-        if (stateObject != null) {
-            if (input.equals("7")) {
-                stateObject.
 
-            }
-
+        if(input.equals("2")){
+            pageObject = sessionService.persistObject(from, new PageObject(item2));
+            return new AppResponse(pageObject.getCurrent());
         }
+
+        if(input.equals("9")){
+            return new AppResponse(pageObject.getNext());
+        }
+
+        if(input.equals("7")) {
+            return new AppResponse(pageObject.getPrev());
+        }
+
         List<String> news = Lists.newArrayList("1 item one", "2 item two", "3 item three", "0 quit");
 
-        String item2 = "I found a solution. I am not very happy with it since it still does not answer my original question why the logging.file property is not respected. ... I don't know whether this would help you but I  ";
 
         if (StringUtils.isEmpty(input)) {
             return new AppResponse(news);
