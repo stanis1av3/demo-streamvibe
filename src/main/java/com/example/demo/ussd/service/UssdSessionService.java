@@ -1,6 +1,6 @@
 package com.example.demo.ussd.service;
 
-import com.example.demo.ussd.apps.custom.StateObject;
+import com.example.demo.ussd.apps.custom.PageObject;
 import com.example.demo.ussd.model.app.AppItem;
 import com.example.demo.ussd.repository.UssdItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +25,7 @@ public class UssdSessionService {
 
     AppItem root;
 
-    public Map<String, StateObject> appSession = new HashMap<>();
+    public Map<String, PageObject> appSession = new HashMap<>();
 
     public AppItem goForward(String from, String message) {
 
@@ -71,12 +70,12 @@ public class UssdSessionService {
         }
     }
 
-    public StateObject persistObject(String from, StateObject state) {
+    public PageObject persistObject(String from, PageObject state) {
         appSession.put(from, state);
         return state;
     }
 
-    public StateObject getObject(String from){
+    public PageObject getObject(String from){
         return appSession.get(from);
     }
 

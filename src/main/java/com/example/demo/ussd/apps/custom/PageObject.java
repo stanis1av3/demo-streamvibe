@@ -9,14 +9,14 @@ import java.util.List;
  * Created by Pavlovskii-pc on 07/02/2018.
  */
 @Data
-public class StateObject {
+public class PageObject {
 
     List<String> pageable;
     Integer lastShownIndex;
     String data;
 
 
-    public StateObject(String string) {
+    public PageObject(String string) {
         int size = 15;
 
         List<String> parts = new ArrayList<>();

@@ -3,7 +3,6 @@ package com.example.demo.ussd.apps.custom;
 import com.example.demo.ussd.apps.system.UssdApp;
 import com.example.demo.ussd.model.app.AppResponse;
 import com.example.demo.ussd.service.UssdSessionService;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -11,7 +10,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Component("ECONOMICS_NEWS_APP")
@@ -21,7 +19,7 @@ public class EconomicsNewsApp implements UssdApp {
     @Autowired
     UssdSessionService sessionService;
 
-    StateObject stateObject;
+    PageObject stateObject;
 
     @Override
     public AppResponse run(String from, String input) {
