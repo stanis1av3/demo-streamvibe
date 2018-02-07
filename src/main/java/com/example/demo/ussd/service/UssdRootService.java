@@ -47,7 +47,6 @@ public class UssdRootService {
         String preparedView = appResponse
                 .stream().reduce((a, b) -> a + "\n" + b).get();
 
-
         return new UssdMessageDTO(from, preparedView);
     }
 

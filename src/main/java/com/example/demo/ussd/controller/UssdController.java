@@ -20,10 +20,11 @@ public class UssdController {
     @Autowired
     UssdRootService ussdService;
 
-    @RequestMapping(value = "/ussd/send",
+    @RequestMapping(value = "/ussd/gateway",
             method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity uploadVideo(@RequestBody UssdMessageDTO messageDTO) throws Exception {
 
+        //todo: te
 
         return new ResponseEntity(ussdService.renderResponse(messageDTO), HttpStatus.OK);
 

@@ -1,5 +1,6 @@
 package com.example.demo.ussd.model.app;
 
+import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -18,6 +19,9 @@ public class AppResponse {
 
     public AppResponse(List<String> body){
         this.body=body;
+    }
+    public AppResponse(String body){
+        this.body = Lists.newArrayList(body);
     }
 
     public AppResponse(Integer offset){

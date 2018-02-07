@@ -1,5 +1,6 @@
 package com.example.demo.ussd.service;
 
+import com.example.demo.ussd.apps.custom.StateObject;
 import com.example.demo.ussd.model.app.AppItem;
 import com.example.demo.ussd.repository.UssdItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,7 @@ public class UssdSessionService {
 
     AppItem root;
 
-    public Map<String, String> appSession = new HashMap<>();
-
-
-
+    public Map<String, StateObject> appSession = new HashMap<>();
 
     public AppItem goForward(String from, String message) {
 
@@ -73,10 +71,15 @@ public class UssdSessionService {
         }
     }
 
-    public String persistAppSession(String from, String state) {
+    public StateObject persistObject(String from, StateObject state) {
         appSession.put(from, state);
         return state;
     }
+
+    public StateObject getObject(String from){
+        return appSession.get(from);
+    }
+
 
     @PostConstruct
     void started(){
