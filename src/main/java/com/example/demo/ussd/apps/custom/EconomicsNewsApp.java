@@ -3,14 +3,12 @@ package com.example.demo.ussd.apps.custom;
 import com.example.demo.ussd.apps.system.UssdApp;
 import com.example.demo.ussd.model.app.AppResponse;
 import com.example.demo.ussd.service.UssdSessionService;
-import com.example.demo.ussd.util.SessionObject;
+import com.example.demo.ussd.util.ListPageObject;
+import com.example.demo.ussd.util.StateObject;
 import com.example.demo.ussd.util.StringPageObject;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -20,15 +18,18 @@ public class EconomicsNewsApp implements UssdApp {
     @Autowired
     UssdSessionService sessionService;
 
-    private SessionObject sessionObject;
+    private StateObject stateObject;
 
     List<String> news;
+    List<String> bigNewsList;
     String item2 = "I found a solution. I am not very happy with it since it still does not answer my original question why the logging.file property is not respected. ... I don't know whether this would help you but I  ";
 
     @Override
     public AppResponse run(String from, String input) {
 
         news = Lists.newArrayList("1 item one", "2 item two", "3 item three", "0 quit");
+
+        bigNewsList = Lists.newArrayList("item one", "item two", "item 3", "item 4", "item 5", "item 6", "item 7", "item 8", "item 9", "item 10");
 
         //on input 0
         if (input.equals("0")) {
@@ -55,42 +56,53 @@ public class EconomicsNewsApp implements UssdApp {
     }
 
     AppResponse onInput0(String from) {
-        if (sessionObject.getPageObject() == null) {
-            return new AppResponse(-1);
-        } else {
+//        if (stateObject.getPageObject() == null && stateObject.getListPageObject() == null) {
+//            return new AppResponse(-1);
+//        }
+
+        if(stateObject.getPageObject()!=null)
+        {
             //clear pageObject
-            sessionObject.setPageObject(null);
-            sessionObject = sessionService.persistSessionObject(from, sessionObject);
-            return new AppResponse(news);
+            stateObject.setPageObject(null);
+            stateObject = sessionService.persistSessionObject(from, stateObject);
+            return new AppResponse(stateObject.getListPageObject().getCurrent());
         }
+        if(stateObject.getListPageObject()!=null){
+            stateObject.setListPageObject(null);
+            stateObject = sessionService.persistSessionObject(from, stateObject);
+        }
+        return new AppResponse(-1);
     }
 
     AppResponse onInput2(String from) {
-        sessionObject.setPageObject(new StringPageObject(item2));
-        sessionObject = sessionService.persistSessionObject(from, sessionObject);
-        return new AppResponse(sessionObject.getPageObject().getCurrent());
+
+        stateObject.setPageObject(new StringPageObject(item2));
+        stateObject = sessionService.persistSessionObject(from, stateObject);
+        return new AppResponse(stateObject.getPageObject().getCurrent());
 
     }
 
     AppResponse onInput7(String from) {
-        return new AppResponse(sessionObject.getPageObject().getPrev());
+        return new AppResponse(stateObject.getPageObject().getPrev());
     }
 
     AppResponse onInput9(String from) {
-        return new AppResponse(sessionObject.getPageObject().getNext());
+        return new AppResponse(stateObject.getPageObject().getNext());
     }
 
     AppResponse onInputAny(String from) {
-        return new AppResponse(news);
+        stateObject.setListPageObject(new ListPageObject(bigNewsList));
+        stateObject = sessionService.persistSessionObject(from, stateObject);
+        return new AppResponse(stateObject.getListPageObject().getCurrent());
     }
 
 
     @Override
     public UssdApp init(String from) {
         if (sessionService.getSessionObject(from) == null) {
-            sessionService.persistSessionObject(from, new SessionObject());
+            sessionService.persistSessionObject(from, new StateObject());
         }
-        this.sessionObject = sessionService.getSessionObject(from);
+        this.stateObject = sessionService.getSessionObject(from);
         return this;
     }
 

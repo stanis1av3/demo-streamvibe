@@ -78,7 +78,7 @@ public class UssdRootService {
             AppItem item = sessionService.goForward(from, input);
             ussdApp = (UssdApp) context.getBean(item.getType().name());
             input="";
-            return ussdApp.run(from, input).getBody();
+            return ussdApp.init(from).run(from, input).getBody();
         }
 
 

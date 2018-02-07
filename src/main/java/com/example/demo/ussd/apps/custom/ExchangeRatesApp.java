@@ -16,7 +16,6 @@ public class ExchangeRatesApp implements UssdApp {
     @Override
     public AppResponse run(String from, String input) {
 
-        System.out.println(string);
         if (!input.equals("0")) {
             return new AppResponse(Lists.newArrayList("USD:22.41", "EUR:25.11", "EUR/USD:1.25", "0 back"));
         } else {
