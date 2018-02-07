@@ -1,6 +1,7 @@
 package com.example.demo.ussd.apps;
 
 import com.example.demo.ussd.apps.system.UssdApp;
+import com.example.demo.ussd.model.app.AppViewObject;
 import com.example.demo.ussd.service.UssdSessionService;
 import com.example.demo.ussd.util.UssdAppUtil;
 import com.google.common.collect.Lists;
@@ -13,28 +14,25 @@ import java.util.List;
 @Component("ECONOMICS_NEWS_APP")
 public class EconomicsNewsApp implements UssdApp {
 
-    @Autowired
-    UssdSessionService sessionService;
-
 
     @Override
-    public List<String> run(String from, String input) {
+    public AppViewObject run(String from, String input) {
         List<String> news = Lists.newArrayList("1 item one", "2 item two", "3 item three", "0 quit");
 
         if(StringUtils.isEmpty(input)){
-            return news;
+            return new AppViewObject(news);
         }
 
         if(input.equals("0")){
-            return Lists.newArrayList(UssdAppUtil.quitApp(sessionService.goBack(from)));
+            return new AppViewObject(-1);
 
         }
 
         if(parseInteger(input)!=null) {
-            return Lists.newArrayList(news.get(parseInteger(input)-1));
+            return new AppViewObject(Lists.newArrayList(news.get(parseInteger(input)-1)));
         }
 
-        return news;
+        return new AppViewObject(news);
 
     }
 

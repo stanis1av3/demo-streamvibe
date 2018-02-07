@@ -1,7 +1,10 @@
 package com.example.demo.ussd.apps.system;
 
+import com.example.demo.ussd.model.app.AppItem;
+import com.example.demo.ussd.model.app.AppViewObject;
+
 import java.util.List;
 
 public interface UssdApp {
-    List<String> run(String from, String input);
+    AppViewObject run(String from, String input);
 }
