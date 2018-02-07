@@ -19,6 +19,8 @@ public class MenuApp implements UssdApp {
     @Autowired
     UssdItemRepository itemRepository;
 
+    String from;
+
     @Override
     public AppResponse run(String from, String input) {
 
@@ -42,6 +44,16 @@ public class MenuApp implements UssdApp {
         }
 
         return new AppResponse(getRootItemMenu());
+    }
+
+    @Override
+    public UssdApp init(String from) {
+        return this;
+    }
+
+    @Override
+    public UssdApp destroy(String from) {
+        return this;
     }
 
     private List<String> getRootItemMenu(){

@@ -64,10 +64,11 @@ public class UssdRootService {
 
         UssdApp ussdApp = (UssdApp) context.getBean(appItemType.name());
 
-        AppResponse view = ussdApp.run(from, input);
+        AppResponse view = ussdApp.init(from).run(from, input);
 
         if(view.getOffset()<0){
             AppItem item = sessionService.goBack(from);
+            ussdApp.destroy(from);
             return item.getChildItems().stream().map(i->i.getCaption()).collect(Collectors.toList());
         }
         if(view.getOffset()==0) {

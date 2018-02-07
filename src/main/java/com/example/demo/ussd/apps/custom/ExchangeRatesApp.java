@@ -11,14 +11,28 @@ import java.util.ArrayList;
 public class ExchangeRatesApp implements UssdApp {
 
 
+    String string;
+
     @Override
     public AppResponse run(String from, String input) {
 
+        System.out.println(string);
         if (!input.equals("0")) {
             return new AppResponse(Lists.newArrayList("USD:22.41", "EUR:25.11", "EUR/USD:1.25", "0 back"));
         } else {
            return new AppResponse(new ArrayList<>(), -1);
         }
+    }
+
+    @Override
+    public UssdApp init(String from) {
+        this.string=from;
+        return this;
+    }
+
+    @Override
+    public UssdApp destroy(String from) {
+        return this;
     }
 
 

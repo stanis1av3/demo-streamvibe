@@ -1,6 +1,8 @@
 package com.example.demo.ussd.service;
 
-import com.example.demo.ussd.apps.custom.PageObject;
+import com.example.demo.ussd.apps.system.UssdApp;
+import com.example.demo.ussd.util.SessionObject;
+import com.example.demo.ussd.util.StringPageObject;
 import com.example.demo.ussd.model.app.AppItem;
 import com.example.demo.ussd.repository.UssdItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,7 @@ public class UssdSessionService {
 
     AppItem root;
 
-    public Map<String, PageObject> appSession = new HashMap<>();
+    public Map<String, SessionObject> appSession = new HashMap<>();
 
     public AppItem goForward(String from, String message) {
 
@@ -70,14 +72,15 @@ public class UssdSessionService {
         }
     }
 
-    public PageObject persistObject(String from, PageObject state) {
+    public SessionObject persistSessionObject(String from, SessionObject state) {
         appSession.put(from, state);
         return state;
     }
 
-    public PageObject getObject(String from){
+    public SessionObject getSessionObject(String from){
         return appSession.get(from);
     }
+
 
 
     @PostConstruct
