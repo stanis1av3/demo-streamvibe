@@ -34,16 +34,16 @@ public class UssdSessionService {
 
     public AppItem goForward(String from, String message) {
 
-        if(StringUtils.isEmpty(message)){
+        if (StringUtils.isEmpty(message)) {
             return getCurrent(from);
         }
 
-        if (itemSesstions.containsKey(from)) {
+        if (getAppItem(from) != null) {
             AppItem nextItem;
-            AppItem currentItem = itemSesstions.get(from);
-            if (itemSesstions.get(from).getChildItems() != null) {
-                nextItem = itemSesstions.get(from).getChildItems().stream().filter(i->i.getCaption().substring(0,1).equals(message)).findFirst().get();
-                itemSesstions.put(from, nextItem);
+            AppItem currentItem = getAppItem(from);
+            if (getAppItem(from).getChildItems() != null) {
+                nextItem = getAppItem(from).getChildItems().stream().filter(i -> i.getCaption().substring(0, 1).equals(message)).findFirst().get();
+                save(from, nextItem);
             } else {
                 return root;
             }
@@ -51,66 +51,69 @@ public class UssdSessionService {
             return nextItem;
 
         } else {
-            return itemSesstions.put(from, root);
+            return save(from, root);
         }
     }
 
     public AppItem goBack(String from) {
-        if (itemSesstions.containsKey(from)) {
-            AppItem item = itemSesstions.get(from);
-            itemSesstions.put(from, item.getParent() != null ? item.getParent() : root);
-            return itemSesstions.get(from);
+        if (getAppItem(from) != null) {
+            AppItem item = getAppItem(from);
+            save(from, item.getParent() != null ? item.getParent() : root);
+            return getAppItem(from);
         } else {
-            return itemSesstions.put(from, root);
+            return save(from, root);
         }
 
     }
 
-    public AppItem getCurrent(String from){
-        if (itemSesstions.containsKey(from)) {
-            return itemSesstions.get(from);
+    public AppItem getCurrent(String from) {
+        if (getAppItem(from) != null) {
+            return getAppItem(from);
         } else {
-            itemSesstions.put(from, root);
+            save(from, root);
             return root;
         }
     }
 
     public StateObject persistSessionObject(String from, StateObject state) {
-        appSession.put(from, state);
+        save(from, state);
         return state;
     }
 
-    public StateObject getSessionObject(String from){
-        return appSession.get(from);
+    public StateObject getSessionObject(String from) {
+        return getStateObject(from);
     }
 
 
-    private AppItem save(String key, AppItem appItem){
-        redisTemplate.opsForValue().set("app_item"+key, MapperUtils.toJson(appItem));
+    private AppItem save(String key, AppItem appItem) {
+        redisTemplate.opsForValue().set("app_item" + key, MapperUtils.toJson(appItem));
         return appItem;
     }
 
-    private StateObject save(String key, StateObject stateObject){
-        redisTemplate.opsForValue().set("state_object"+key, MapperUtils.toJson(stateObject));
+    private StateObject save(String key, StateObject stateObject) {
+        redisTemplate.opsForValue().set("state_object" + key, MapperUtils.toJson(stateObject));
         return stateObject;
     }
 
-    private StateObject getStateObject(String key){
-        String json = redisTemplate.opsForValue().get("state_object"+key);
+    private StateObject getStateObject(String key) {
+        String json = redisTemplate.opsForValue().get("state_object" + key);
         return MapperUtils.toObject(StateObject.class, json);
     }
 
 
-    private AppItem getAppItem(String key){
-        String json = redisTemplate.opsForValue().get("app_item"+key);
-        return MapperUtils.toObject(AppItem.class, json);
+    private AppItem getAppItem(String key) {
+        String json = redisTemplate.opsForValue().get("app_item" + key);
+        if (json != null)
+            return MapperUtils.toObject(AppItem.class, json);
+        else
+            return null;
     }
 
 
     @PostConstruct
-    void started(){
-        root=itemRepository.getRootItem();
-        redisTemplate.opsForValue().set("testkey","testvalue");
+    void started() {
+        root = itemRepository.getRootItem();
+        redisTemplate.opsForValue().set("testkey", "testvalue");
         System.out.println(redisTemplate.opsForValue().get("testkey"));
     }
 }
