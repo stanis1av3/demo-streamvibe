@@ -1,4 +1,4 @@
-package com.example.demo.ussd.apps.custom;
+package com.example.demo.ussd.apps.custom.news;
 
 import com.example.demo.ussd.apps.system.UssdApp;
 import com.example.demo.ussd.model.app.AppResponse;
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component("ECONOMICS_NEWS_APP")
-public class EconomicsNewsApp implements UssdApp {
+@Component("NEWS_APP")
+public class NewsApp implements UssdApp {
 
     @Autowired
     UssdSessionService sessionService;

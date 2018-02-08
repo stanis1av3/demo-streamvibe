@@ -6,6 +6,7 @@ import com.example.demo.ussd.repository.UssdItemRepository;
 import com.example.demo.ussd.service.UssdSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,7 +25,7 @@ public class MenuApp implements UssdApp {
     @Override
     public AppResponse run(String from, String input) {
 
-        if(input.equals("")) {
+        if (input.equals("")) {
             try {
                 return new AppResponse(getCurrentItemMenu(from));
 
@@ -33,13 +34,13 @@ public class MenuApp implements UssdApp {
             }
         }
 
-        if(input.equals("0")){
+        if (input.equals("0")) {
             return new AppResponse(-1);
         }
 
         Integer index = parseInput(input);
 
-        if(index!=null){
+        if (index != null) {
             return new AppResponse(index);
         }
 
@@ -56,23 +57,30 @@ public class MenuApp implements UssdApp {
         return this;
     }
 
-    private List<String> getRootItemMenu(){
-        return itemRepository.getRootItem().getChildItems()
+    private List<String> getRootItemMenu() {
+        List<String> output = itemRepository.getRootItem().getChildItems()
                 .stream()
                 .map(AppItem::getCaption).collect(Collectors.toList());
+        String header = itemRepository.getRootItem().getHeader();
+        if(!StringUtils.isEmpty(header)){
+            output.add(0,header);
+        }
+        return output;
     }
 
-    private List<String> getCurrentItemMenu(String from){
+    private List<String> getCurrentItemMenu(String from) {
 
         AppItem item = sessionService.getCurrent(from);
-        return item.getChildItems()
+
+        List<String> output = item.getChildItems()
                 .stream()
                 .map(AppItem::getCaption).collect(Collectors.toList());
-
+        String header = item.getHeader();
+        if(!StringUtils.isEmpty(header)){
+            output.add(0,header);
+        }
+        return output;
     }
-
-
-
 
 
     private Integer parseInput(String input) {

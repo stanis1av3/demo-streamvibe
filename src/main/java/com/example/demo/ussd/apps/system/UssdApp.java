@@ -4,6 +4,6 @@ import com.example.demo.ussd.model.app.AppResponse;
 
 public interface UssdApp {
     AppResponse run(String from, String input);
-    UssdApp init(String from);
-    UssdApp destroy(String from);
+    default UssdApp init(String from){return this;}
+    default UssdApp destroy(String from){return this;}
 }

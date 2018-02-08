@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Connectik USSD test</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu+Mono" rel="stylesheet">
+    <style type="text/css">
+        .container {
+            max-width: 960px;
+            margin: 2em auto;
+        }
+
+        .message {
+            border: 1px solid grey;
+            white-space: pre-wrap;
+            padding: 2em;
+            margin-bottom: 2em;
+            background: rgba(0, 0, 0, 0.05);
+            font-family: "Ubuntu Mono", monospace;
+        }
+
+        .request {
+            display: flex;
+            align-items: stretch;
+            font-size: 1.2em;
+        }
+
+        .request input,
+        .form-field input {
+            border: 1px solid grey;
+            width: 100%;
+            padding: 0.5em;
+            line-height: 1.2em;
+            box-sizing: border-box;
+        }
+
+        .request button {
+            width: 80px;
+            padding: 0.5em;
+            line-height: 1.2em;
+        }
+
+        label {
+            margin: 1em 0 0.5em 0;
+            display: block;
+        }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        let requestUrl = "http://localhost:8080/ussd/gateway";
+        let defaultParams = {
+            from: "",
+            to: "",
+            sid: ""
+        };
+
+        $(document).ready(function () {
+            $("#send-btn").click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                let message = $("#request").val();
+                sendMessage(message);
+            });
+
+            $("#request-url").val(requestUrl);
+            $("#from").val(defaultParams.from);
+            $("#to").val(defaultParams.to);
+        });
+
+        function sendMessage(data) {
+            let params = defaultParams;
+            params.from = $("#from").val();
+            params.to = $("#to").val();
+            params.message = data || "";
+
+            console.log(params);
+
+            $.ajax({
+                method: "POST",
+                url: $("#request-url").val(),
+                data: JSON.stringify(params),
+                crossDomain: true,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    console.log(result);
+                    $("#message").text(result.message);
+                    $("#request").val("");
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <form>
+        <h1>USSD</h1>
+        <label>Request URL:</label>
+        <div class="form-field">
+            <input type="text" id="request-url" name="request-url"/>
+        </div>
+        <h3>Device screen:</h3>
+        <div class="message" id="message">
+
+        </div>
+        <h3>User input:</h3>
+        <label>From:</label>
+        <div class="form-field">
+            <input type="text" id="from" name="from"/>
+        </div>
+        <label>To:</label>
+        <div class="form-field">
+            <input type="text" id="to" name="to"/>
+        </div>
+        <label>Message:</label>
+        <div class="request">
+            <input type="text" id="request" name="request"/>
+            <button type="submit" id="send-btn">Send</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
