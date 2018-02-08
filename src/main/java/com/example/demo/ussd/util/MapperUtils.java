@@ -13,15 +13,7 @@ import java.util.Map;
  */
 public class MapperUtils {
 
-    static ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-    public static <T> Map toMap(T t) {
-        return mapper.convertValue(t, Map.class);
-    }
-
-    public static <T> T toObject(Class<T> t, Map map) {
-        return mapper.convertValue(map, t);
-    }
+    static ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();//.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
     public static <T> T toObject(Class<T> t, String json) {
         try {

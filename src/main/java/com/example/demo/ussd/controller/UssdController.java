@@ -1,8 +1,7 @@
 package com.example.demo.ussd.controller;
 
-import com.example.demo.ussd.model.UssdMessageDTO;
+import com.example.demo.ussd.model.transport.UssdMessageDTO;
 import com.example.demo.ussd.service.UssdRootService;
-import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 /**

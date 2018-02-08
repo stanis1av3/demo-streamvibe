@@ -38,16 +38,18 @@ public class UssdSessionService {
             return getCurrent(from);
         }
 
-        if (getAppItem(from) != null) {
+        AppItem currentItem = getAppItem(from);
+        if (currentItem != null) {
             AppItem nextItem;
-            AppItem currentItem = getAppItem(from);
-            if (getAppItem(from).getChildItems() != null) {
-                nextItem = getAppItem(from).getChildItems().stream().filter(i -> i.getCaption().substring(0, 1).equals(message)).findFirst().get();
-                save(from, nextItem);
+
+            if (currentItem.getChildItems() != null) {
+                nextItem = currentItem.getChildItems().stream().filter(i -> i.getCaption().substring(0, 1).equals(message)).findFirst().get();
+
             } else {
                 return root;
             }
-            nextItem.setParent(currentItem);
+            //nextItem.setParent(currentItem);
+            save(from, nextItem);
             return nextItem;
 
         } else {
@@ -56,9 +58,10 @@ public class UssdSessionService {
     }
 
     public AppItem goBack(String from) {
-        if (getAppItem(from) != null) {
-            AppItem item = getAppItem(from);
-            save(from, item.getParent() != null ? item.getParent() : root);
+        AppItem item = getAppItem(from);
+        if (item != null) {
+            AppItem parent = itemRepository.findParent(item);
+            save(from, parent != null ? parent : root);
             return getAppItem(from);
         } else {
             return save(from, root);
@@ -67,8 +70,9 @@ public class UssdSessionService {
     }
 
     public AppItem getCurrent(String from) {
-        if (getAppItem(from) != null) {
-            return getAppItem(from);
+        AppItem current = getAppItem(from);
+        if (current != null) {
+            return current;
         } else {
             save(from, root);
             return root;
@@ -97,7 +101,9 @@ public class UssdSessionService {
 
     private StateObject getStateObject(String key) {
         String json = redisTemplate.opsForValue().get("state_object" + key);
-        return MapperUtils.toObject(StateObject.class, json);
+        if (json != null)
+            return MapperUtils.toObject(StateObject.class, json);
+        else return null;
     }
 
 
@@ -113,7 +119,5 @@ public class UssdSessionService {
     @PostConstruct
     void started() {
         root = itemRepository.getRootItem();
-        redisTemplate.opsForValue().set("testkey", "testvalue");
-        System.out.println(redisTemplate.opsForValue().get("testkey"));
     }
 }

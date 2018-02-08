@@ -1,5 +1,6 @@
 package com.example.demo.ussd.model.app;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.List;
@@ -16,8 +17,6 @@ public class AppItem {
 
     String caption;
 
-    AppItem parent;
-
     List<AppItem> childItems;
 
 
@@ -25,14 +24,6 @@ public class AppItem {
         MENU,
         NEWS_APP,
         EVENTS_APP,
-        ABOUT_APP,
-        APP_A,
-        APP_B,
-        APP_C,
-        APP_X,
-        GO_BACK_APP,
-        EXCHANGE_RATES_APP,
-        ECONOMICS_NEWS_APP,
         LICENSE_PRICE_PRIMA_APP,
         ABOUT_PRIMA_APP,
         LICENSE_REGISTRATION_SUPPORT_APP,
@@ -45,15 +36,7 @@ public class AppItem {
         ABOUT_US_APP,
         ABOUT_PHONE_APP,
         ABOUT_EMAIL_APP,
-        ABOUT_ADDRESS_APP,
-        APP_PING
+        ABOUT_ADDRESS_APP
     }
 
-    @Override
-    public String toString() {
-        return "Item{" +
-                "type=" + type +
-                ", caption='" + caption + '\'' +
-                '}';
-    }
 }

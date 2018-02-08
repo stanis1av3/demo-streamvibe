@@ -1,4 +1,4 @@
-package com.example.demo.ussd.model;
+package com.example.demo.ussd.model.transport;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UssdMessageDTO {
-    String from;
+    String msisdn;
     String to;
     String sid;
     String message;

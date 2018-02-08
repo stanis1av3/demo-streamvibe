@@ -51,7 +51,7 @@
     <script type="text/javascript">
         let requestUrl = "http://localhost:8080/ussd/gateway";
         let defaultParams = {
-            from: "",
+            msisdn: "",
             to: "",
             sid: ""
         };
@@ -65,13 +65,13 @@
             });
 
             $("#request-url").val(requestUrl);
-            $("#from").val(defaultParams.from);
+            $("#sid").val(defaultParams.sid);
             $("#to").val(defaultParams.to);
         });
 
         function sendMessage(data) {
             let params = defaultParams;
-            params.from = $("#from").val();
+            params.sid = $("#sid").val();
             params.to = $("#to").val();
             params.message = data || "";
 
@@ -106,9 +106,9 @@
 
         </div>
         <h3>User input:</h3>
-        <label>From:</label>
+        <label>Sid:</label>
         <div class="form-field">
-            <input type="text" id="from" name="from"/>
+            <input type="text" id="sid" name="sid"/>
         </div>
         <label>To:</label>
         <div class="form-field">

@@ -117,11 +117,11 @@ public class StreamingServiceImpl implements StreamingService {
             throw new IllegalArgumentException("STREAM_VIDEO_URL is empty!");
         }
         System.out.println("ok..");
-        System.out.println("Getting api token from streamVibe..");
+        System.out.println("Getting api token msisdn streamVibe..");
         try {
             getApiToken();
         } catch (Exception e) {
-            throw new IllegalArgumentException("Can't get ApiToken from streamVibe!! Check availability or credentials");
+            throw new IllegalArgumentException("Can't get ApiToken msisdn streamVibe!! Check availability or credentials");
         }
         System.out.println("ok..");
         System.out.println("Streaming service started");

@@ -14,22 +14,19 @@ import java.util.List;
 
 @Component("NEWS_APP")
 public class NewsApp implements UssdApp {
-
+//todo:a stub
     @Autowired
     UssdSessionService sessionService;
 
     private StateObject stateObject;
 
-    List<String> news;
     List<String> bigNewsList;
     String item2 = "I found a solution. I am not very happy with it since it still does not answer my original question why the logging.file property is not respected. ... I don't know whether this would help you but I  ";
 
     @Override
     public AppResponse run(String from, String input) {
 
-        news = Lists.newArrayList("1 item one", "2 item two", "3 item three", "0 quit");
-
-        bigNewsList = Lists.newArrayList("item one", "item two", "item 3", "item 4", "item 5", "item 6", "item 7", "item 8", "item 9", "item 10");
+        bigNewsList = Lists.newArrayList("item one", "item two", "item three", "item four", "item five", "item item six", "item 7", "item 8", "item 9", "item 10");
 
         //on input 0
         if (input.equals("0")) {
@@ -77,17 +74,22 @@ public class NewsApp implements UssdApp {
     AppResponse onInput2(String from) {
 
         stateObject.setPageObject(new StringPageObject(item2));
-        stateObject = sessionService.persistSessionObject(from, stateObject);
-        return new AppResponse(stateObject.getPageObject().getCurrent());
+        AppResponse appResponse = new AppResponse(stateObject.getPageObject().getCurrent());
+        sessionService.persistSessionObject(from, stateObject);
+        return appResponse;
 
     }
 
     AppResponse onInput7(String from) {
-        return new AppResponse(stateObject.getPageObject().getPrev());
+        AppResponse appResponse = new AppResponse(stateObject.getPageObject().getPrev());;
+        sessionService.persistSessionObject(from, stateObject);
+        return appResponse;
     }
 
     AppResponse onInput9(String from) {
-        return new AppResponse(stateObject.getPageObject().getNext());
+        AppResponse appResponse = new AppResponse(stateObject.getPageObject().getNext());
+        sessionService.persistSessionObject(from, stateObject);
+        return appResponse;
     }
 
     AppResponse onInputAny(String from) {

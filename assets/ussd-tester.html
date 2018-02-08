@@ -59,13 +59,13 @@
 			});
 
 			$("#request-url").val(requestUrl);
-			$("#from").val(defaultParams.from);
+			$("#msisdn").val(defaultParams.from);
 			$("#to").val(defaultParams.to);
 		});
 
 		function sendMessage(data) {
             let params = defaultParams;
-            params.from = $("#from").val();
+            params.from = $("#msisdn").val();
             params.to = $("#to").val();
             params.message = data;
 

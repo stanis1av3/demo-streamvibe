@@ -1,13 +1,16 @@
 package com.example.demo.ussd.util;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Data
+@NoArgsConstructor
 public class ListPageObject {
 
     List<List<String>> pageable;
@@ -21,9 +24,11 @@ public class ListPageObject {
 
 
     public ListPageObject(List<String> list) {
+
+
         int[] index = {1};
         list = list.stream().map(s -> {
-            s = index[0]++ +" "+s;
+            s = index[0]++ + " " + s;
             if (index[0] > 5) {
                 index[0] = 0;
             }
@@ -40,16 +45,21 @@ public class ListPageObject {
 
     }
 
+    @JsonIgnore
     public List<String> getCurrent() {
         if (lastShownIndex == null) {
             lastShownIndex = 0;
         }
+        if (pageable == null) return null;
+
         List<String> elements = new ArrayList<>(pageable.get(lastShownIndex));
         elements.addAll(getControls());
         return elements;
     }
 
+    @JsonIgnore
     public List<String> getPrev() {
+        if (lastShownIndex == null || pageable == null) return null;
 
         if (lastShownIndex > 0) {
             lastShownIndex--;
@@ -59,7 +69,10 @@ public class ListPageObject {
         return elements;
     }
 
+    @JsonIgnore
     public List<String> getNext() {
+        if (lastShownIndex == null || pageable == null) return null;
+
         if (lastShownIndex < pageable.size() - 1) {
             lastShownIndex++;
         }
@@ -68,6 +81,7 @@ public class ListPageObject {
         return elements;
     }
 
+    @JsonIgnore
     private List<String> getControls() {
         List<String> controls = new ArrayList<>();
         if (!isFirst() && !isLast()) {
@@ -88,14 +102,18 @@ public class ListPageObject {
         return controls;
     }
 
+    @JsonIgnore
     private boolean isFirst() {
+        if (lastShownIndex == null) return false;
         if (lastShownIndex == 0) {
             return true;
         }
         return false;
     }
 
+    @JsonIgnore
     private boolean isLast() {
+        if (lastShownIndex == null) return false;
         if (lastShownIndex + 1 == pageable.size()) {
             return true;
         }

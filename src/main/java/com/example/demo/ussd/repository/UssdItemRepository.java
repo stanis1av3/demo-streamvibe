@@ -8,6 +8,8 @@ import com.sun.glass.ui.Menu;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Pavlovskii-pc on 05/02/2018.
@@ -17,85 +19,35 @@ public class UssdItemRepository {
 
     AppItem root;
 
-    public AppItem getRootItem(){
+    public AppItem getRootItem() {
         return root;
     }
 
     @PostConstruct
-    void started(){
-        AppItem root = actualMenu();
-
-        this.root = root;
+    void started() {
+        this.root = actualMenu();
     }
 
-    private AppItem fakeMenu() {
-        AppItem root = new AppItem();
+    public AppItem findParent(AppItem appItem) {
+        List<AppItem> appItems = new ArrayList<>(root.getChildItems());
+        AppItem parent = root;
+        for (int i = 0; i < appItems.size(); i++) {
+            if (appItems.get(i).getChildItems() == null) {
+                continue;
+            }
+            if (appItems.stream().anyMatch(ai -> ai.equals(appItem))) {
+                return parent;
+            } else {
+                parent = appItems.get(i);
+            }
+            appItems.addAll(appItems.get(i).getChildItems());
 
-        root.setHeader("Welcome to OISSU APP");
-
-        root.setType(AppItem.Type.MENU);
-
-        AppItem itemA = new AppItem();
-        itemA.setCaption("1 Currencies");
-        itemA.setType(AppItem.Type.EXCHANGE_RATES_APP);
-
-        AppItem itemB = new AppItem();
-        itemB.setCaption("2 News");
-        itemB.setType(AppItem.Type.MENU);
-
-        AppItem itemC = new AppItem();
-        itemC.setCaption("3 Weather");
-        itemC.setType(AppItem.Type.MENU);
-
-        AppItem itemQuit = new AppItem();
-
-        itemQuit.setCaption("0 Quit");
-        itemQuit.setType(AppItem.Type.GO_BACK_APP);
-
-        root.setChildItems(Lists.newArrayList(itemA, itemB, itemC, itemQuit));
-
-        AppItem back = new AppItem();
-        back.setCaption("0 back");
-        back.setType(AppItem.Type.GO_BACK_APP);
-
-        AppItem itemBA = new AppItem();
-        itemBA.setCaption("1 Local news");
-        itemBA.setType(AppItem.Type.MENU);
-
-        AppItem itemBB = new AppItem();
-        itemBB.setCaption("2 Federal news");
-        itemBB.setType(AppItem.Type.MENU);
-        itemB.setChildItems(Lists.newArrayList(itemBA, itemBB, back));
-
-        AppItem itemBBA = new AppItem();
-        itemBBA.setCaption("1 Economics");
-        itemBBA.setType(AppItem.Type.ECONOMICS_NEWS_APP);
-
-
-        AppItem itemBBB = new AppItem();
-        itemBBB.setCaption("2 Security");
-        itemBBB.setType(AppItem.Type.APP_A);
-
-        AppItem itemBBC = new AppItem();
-        itemBBC.setCaption("3 Culture");
-        itemBBC.setType(AppItem.Type.APP_B);
-
-        AppItem itemBBD = new AppItem();
-        itemBBD.setCaption("4 Sports");
-        itemBBD.setType(AppItem.Type.APP_C);
-
-        AppItem back3 = new AppItem();
-        back3.setCaption("0 back");
-        back3.setType(AppItem.Type.GO_BACK_APP);
-
-        itemBB.setChildItems(Lists.newArrayList(itemBBA, itemBBB, itemBBC, itemBBD, back3));
-
-        root.setCaption("Welcome to 'OISSU APP'");
-        return root;
+        }
+        return null;
     }
 
-
-    AppItem actualMenu(){
+//todo: a stub - to be moved to DB
+    AppItem actualMenu() {
         AppItem root = new AppItem();
 
         root.setHeader("Welcome to OISSU APP");
@@ -211,19 +163,8 @@ public class UssdItemRepository {
 
         aboutMenuItem.setChildItems(Lists.newArrayList(aboutUsItem, aboutPhoneItem, aboutEmailItem, aboutAddressItem));
 
-        ObjectMapper mapper = new ObjectMapper();
-
-
-//Object to JSON in String
-        try {
-            String jsonInString = mapper.writeValueAsString(root);
-            System.out.println(jsonInString);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
 
         return root;
-
 
 
     }

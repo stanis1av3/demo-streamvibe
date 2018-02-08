@@ -1,19 +1,20 @@
 package com.example.demo.ussd.util;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class StateObject {
 
 
-    StringPageObject pageObject;
-    ListPageObject listPageObject;
+    private StringPageObject pageObject;
+    private ListPageObject listPageObject;
 
-    String userInput;
+    private String userInput;
 
     public void setPageObject(StringPageObject stringPageObject){
         this.pageObject = stringPageObject;
     }
-
 
 }

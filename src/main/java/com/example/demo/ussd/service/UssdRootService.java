@@ -1,7 +1,7 @@
 package com.example.demo.ussd.service;
 
 import com.example.demo.ussd.apps.system.UssdApp;
-import com.example.demo.ussd.model.UssdMessageDTO;
+import com.example.demo.ussd.model.transport.UssdMessageDTO;
 import com.example.demo.ussd.model.app.AppItem;
 import com.example.demo.ussd.model.app.AppResponse;
 import com.example.demo.ussd.repository.UssdItemRepository;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Pavlovskii-pc on 05/02/2018.
@@ -38,7 +37,7 @@ public class UssdRootService {
 
 
         String input = messageDTO.getMessage();
-        String from = messageDTO.getFrom();
+        String from = messageDTO.getSid();
 
         AppItem currentItem = sessionService.getCurrent(from);
 
@@ -57,6 +56,7 @@ public class UssdRootService {
 
         AppResponse view = ussdApp.init(from).run(from, input);
 
+        //quit
         if(view.getOffset()<0){
             AppItem item = sessionService.goBack(from);
             ussdApp = (UssdApp) context.getBean(item.getType().name());
@@ -64,16 +64,17 @@ public class UssdRootService {
             ussdApp.destroy(from);
             return body;
         }
+        //stay
         if(view.getOffset()==0) {
             return view.getBody();
         }
+        //go forward
         if(view.getOffset()>0){
             AppItem item = sessionService.goForward(from, input);
             ussdApp = (UssdApp) context.getBean(item.getType().name());
             input="";
             return ussdApp.init(from).run(from, input).getBody();
         }
-
 
         return view.getBody();
     }
