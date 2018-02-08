@@ -122,6 +122,7 @@ public class UssdItemRepository {
         donateItem.setCaption("5 Donate");
         donateItem.setType(AppItem.Type.MENU);
 
+
         root.setChildItems(Lists.newArrayList(newsItem, eventsItem, aboutMenuItem, oissuLicensPlansItem, donateItem));
 
         AppItem primarieItem = new AppItem();

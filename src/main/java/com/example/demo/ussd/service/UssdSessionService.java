@@ -1,9 +1,11 @@
 package com.example.demo.ussd.service;
 
+import com.example.demo.ussd.util.MapperUtils;
 import com.example.demo.ussd.util.StateObject;
 import com.example.demo.ussd.model.app.AppItem;
 import com.example.demo.ussd.repository.UssdItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -16,6 +18,9 @@ import java.util.Map;
  */
 @Service
 public class UssdSessionService {
+
+    @Autowired
+    StringRedisTemplate redisTemplate;
 
 
     @Autowired
@@ -80,9 +85,32 @@ public class UssdSessionService {
     }
 
 
+    private AppItem save(String key, AppItem appItem){
+        redisTemplate.opsForValue().set("app_item"+key, MapperUtils.toJson(appItem));
+        return appItem;
+    }
+
+    private StateObject save(String key, StateObject stateObject){
+        redisTemplate.opsForValue().set("state_object"+key, MapperUtils.toJson(stateObject));
+        return stateObject;
+    }
+
+    private StateObject getStateObject(String key){
+        String json = redisTemplate.opsForValue().get("state_object"+key);
+        return MapperUtils.toObject(StateObject.class, json);
+    }
+
+
+    private AppItem getAppItem(String key){
+        String json = redisTemplate.opsForValue().get("app_item"+key);
+        return MapperUtils.toObject(AppItem.class, json);
+    }
+
 
     @PostConstruct
     void started(){
         root=itemRepository.getRootItem();
+        redisTemplate.opsForValue().set("testkey","testvalue");
+        System.out.println(redisTemplate.opsForValue().get("testkey"));
     }
 }

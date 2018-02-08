@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +29,25 @@ public class AppResponse {
         this.offset = offset;
     }
 
+    public AppResponse(Integer offset, List<String> body){
+        this.offset = offset;
+        this.body = body;
+    }
 
+    public static AppResponse goBackAfter(List<String> body) {
+        return new AppResponse(-1, body);
+    }
+
+    public static AppResponse goBackAfter() {
+        return new AppResponse(-1, new ArrayList<>());
+    }
+
+    public static AppResponse goForwardAfter(Integer offset) {
+        return new AppResponse(offset);
+    }
+
+    public static AppResponse stayHere(List<String> body){
+        return new AppResponse(body);
+    }
 
 }

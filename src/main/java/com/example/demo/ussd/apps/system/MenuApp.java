@@ -27,24 +27,24 @@ public class MenuApp implements UssdApp {
 
         if (input.equals("")) {
             try {
-                return new AppResponse(getCurrentItemMenu(from));
+                return AppResponse.stayHere(getCurrentItemMenu(from));
 
             } catch (Exception e) {
-                return new AppResponse(getRootItemMenu());
+                return AppResponse.stayHere(getRootItemMenu());
             }
         }
 
         if (input.equals("0")) {
-            return new AppResponse(-1);
+            return AppResponse.goBackAfter(getCurrentItemMenu(from));
         }
 
         Integer index = parseInput(input);
 
         if (index != null) {
-            return new AppResponse(index);
+            return AppResponse.goForwardAfter(index);
         }
 
-        return new AppResponse(getRootItemMenu());
+        return AppResponse.stayHere(getRootItemMenu());
     }
 
     @Override

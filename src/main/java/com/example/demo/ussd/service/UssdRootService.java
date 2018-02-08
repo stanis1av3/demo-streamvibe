@@ -50,15 +50,6 @@ public class UssdRootService {
         return new UssdMessageDTO(from, preparedView);
     }
 
-    private Integer parseInput(String input) {
-        try {
-            return Integer.parseInt(input);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-
 
     private List<String> executeApp(String from, String input, AppItem.Type appItemType) {
 
@@ -68,8 +59,10 @@ public class UssdRootService {
 
         if(view.getOffset()<0){
             AppItem item = sessionService.goBack(from);
+            ussdApp = (UssdApp) context.getBean(item.getType().name());
+            List<String> body = ussdApp.run(from, input).getBody();
             ussdApp.destroy(from);
-            return item.getChildItems().stream().map(i->i.getCaption()).collect(Collectors.toList());
+            return body;
         }
         if(view.getOffset()==0) {
             return view.getBody();
